@@ -1,0 +1,262 @@
+﻿<Window x:Class="PrismApp.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:prism="http://prismlibrary.com/"
+        xmlns:common="clr-namespace:PrismApp.Common"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        prism:ViewModelLocator.AutoWireViewModel="True"
+        Title="{Binding Title}" Height="800" Width="1280">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <ContentControl Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" prism:RegionManager.RegionName="DataRegion" />
+        <ContentControl Grid.Row="0" Grid.Column="1"  prism:RegionManager.RegionName="ChartRegion" />
+        <ContentControl Grid.Row="1" Grid.Column="1"  prism:RegionManager.RegionName="ControlRegion" />
+
+
+        <!--<DataGrid x:Name="SequenceDataGrid" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Sequence}"   AutoGenerateColumns="False"  CanUserSortColumns="True"  SelectedIndex="{Binding SelectedIndex}" CanUserAddRows="True"  >
+            <DataGrid.ItemContainerStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="DataGridRow">
+                                <SelectiveScrollingGrid>
+                                    <SelectiveScrollingGrid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </SelectiveScrollingGrid.ColumnDefinitions>
+                                    <DataGridRowHeader	Width="10"	SelectiveScrollingGrid.SelectiveScrollingOrientation="Vertical"			Visibility="{Binding HeadersVisibility,ConverterParameter={x:Static DataGridHeadersVisibility.Row},   Converter={x:Static DataGrid.HeadersVisibilityConverter},    RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
+                                    <DataGridCellsPresenter Grid.Column="1"		ItemsPanel="{TemplateBinding ItemsPanel}"	SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                </SelectiveScrollingGrid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="true">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="DataGridRow">
+                                        <SelectiveScrollingGrid>
+                                            <SelectiveScrollingGrid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </SelectiveScrollingGrid.ColumnDefinitions>
+                                            <DataGridRowHeader	Width="10"	SelectiveScrollingGrid.SelectiveScrollingOrientation="Vertical"			Visibility="{Binding HeadersVisibility,ConverterParameter={x:Static DataGridHeadersVisibility.Row},   Converter={x:Static DataGrid.HeadersVisibilityConverter},    RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" >
+                                                <Path  Data="M 0,0 0,5 3,3" Stroke="Black" Fill="Black" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                            </DataGridRowHeader>
+                                            <DataGridCellsPresenter Grid.Column="1"		ItemsPanel="{TemplateBinding ItemsPanel}"	SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                        </SelectiveScrollingGrid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.ItemContainerStyle>
+            <DataGrid.InputBindings>
+                <KeyBinding Key="X" Modifiers="Control" Command="{Binding  DataGridCutItemsCommand}"                                                                     CommandParameter="{Binding Path=SelectedItems,ElementName=SequenceDataGrid}"/>
+                <KeyBinding Key="C" Modifiers="Control" Command="{Binding  DataGridCopyItemsCommand}"                                                                     CommandParameter="{Binding Path=SelectedItems,ElementName=SequenceDataGrid}"/>
+                <KeyBinding Key="V" Modifiers="Control" Command="{Binding  DataGridPasteItemsCommand}"/>
+                <KeyBinding Key="Insert" Command="{Binding  DataGridInsertCommand}"/>
+                <KeyBinding Key="Delete" Command="{Binding DataGridDeleteCommand}"                                                                          CommandParameter="{Binding Path=SelectedItems,ElementName=SequenceDataGrid}"/>
+            </DataGrid.InputBindings>
+            <DataGrid.ContextMenu >
+                <ContextMenu   >
+                    <MenuItem Header="Insert"  InputGestureText="Insert"  Command="{Binding  DataGridInsertCommand}"/>
+                    <MenuItem Header="Delete"  InputGestureText="Delete" Command="{Binding  DataGridDeleteCommand}"
+                                                              CommandParameter="{Binding Path=PlacementTarget.SelectedItems,RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" />
+                    <MenuItem Header="DeleteAll" Command="{Binding  DataGridDeleteAllCommand}"/>
+                    <Separator/>
+                    <MenuItem Header="Cut"   InputGestureText="Control+X" Command="{Binding  DataGridCutItemsCommand}"  
+                                                              CommandParameter="{Binding Path=PlacementTarget.SelectedItems,RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}"/>
+                    <MenuItem Header="Copy"  InputGestureText="Control+C" Command="{Binding  DataGridCopyItemsCommand}"  
+                                                              CommandParameter="{Binding Path=PlacementTarget.SelectedItems,RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}"/>
+                    <MenuItem Header="Paste"  InputGestureText="Control+V" Command="{Binding  DataGridPasteItemsCommand}"/>
+                    <Separator/>
+                    <MenuItem Header="Export" Command="{Binding  DataGridExportCommand}" />
+                    <MenuItem Header="Import" Command="{Binding  DataGridImportCommand}" />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+            <DataGrid.Columns>
+                <DataGridTemplateColumn MinWidth="60">
+                    <DataGridTemplateColumn.Header>
+                        <DataGridColumnHeader HorizontalContentAlignment="Center" Content="Id" FontWeight="Bold"/>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Id}" HorizontalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn MinWidth="120">
+                    <DataGridTemplateColumn.Header>
+                        <DataGridColumnHeader HorizontalContentAlignment="Center" Content="StepTarget" FontWeight="Bold"></DataGridColumnHeader>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid HorizontalAlignment="Stretch">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Center" TextAlignment="Center" Text="{Binding StepTarget}"></TextBlock>
+                                <Path Grid.Column="1" x:Name="Arrow" Data="{StaticResource DownArrowGeometry}" Fill="Black" HorizontalAlignment="Center" Margin="3,1,3,0" VerticalAlignment="Center"/>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <ComboBox SelectedItem="{Binding StepTarget}" ItemsSource="{Binding Source={StaticResource StepTargets}}" 
+                                      IsDropDownOpen="True" >
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="Binding"></TextBlock>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn MinWidth="100">
+                    <DataGridTemplateColumn.Header>
+                        <DataGridColumnHeader HorizontalContentAlignment="Center" Content="Value" FontWeight="Bold"></DataGridColumnHeader>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid HorizontalAlignment="Center" VerticalAlignment="Stretch">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" ></ColumnDefinition>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding TargetValue, StringFormat={}{0:F1}}" VerticalAlignment="Center" HorizontalAlignment="Stretch"  TextAlignment="Center"></TextBlock>
+                                <TextBlock Margin="3,0,0,0" Text="{Binding TargetUnit}" Grid.Column="1" VerticalAlignment="Center" ></TextBlock>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Text="{Binding TargetValue}" TextAlignment="Center"></TextBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                    <DataGridTemplateColumn.CellStyle>
+                        <Style BasedOn="{StaticResource {x:Type DataGridCell}}" TargetType="{x:Type DataGridCell}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding StepTarget}" Value="{x:Static common:StepTarget.Wait}">
+                                    <Setter Property="IsEnabled" Value="False" />
+                                    <Setter Property="ContentTemplate">
+                                        <Setter.Value>
+                                            <DataTemplate>
+                                                <TextBlock/>
+                                            </DataTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTemplateColumn.CellStyle>
+
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn MinWidth="120">
+                    <DataGridTemplateColumn.Header>
+                        <DataGridColumnHeader HorizontalContentAlignment="Center" Content="RampMode" FontWeight="Bold"></DataGridColumnHeader>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid HorizontalAlignment="Stretch">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding RampMode}" VerticalAlignment="Center" TextAlignment="Center"></TextBlock>
+                                <Path Grid.Column="1" x:Name="Arrow" Data="{StaticResource DownArrowGeometry}" Fill="Black" HorizontalAlignment="Center" Margin="3,1,3,0" VerticalAlignment="Center"/>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <ComboBox SelectedItem="{Binding RampMode}" ItemsSource="{Binding Source={StaticResource RampModes}}" 
+                                      IsDropDownOpen="True" >
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" TextAlignment="Center"></TextBlock>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                    <DataGridTemplateColumn.CellStyle>
+                        <Style BasedOn="{StaticResource {x:Type DataGridCell}}" TargetType="{x:Type DataGridCell}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding StepTarget}" Value="{x:Static common:StepTarget.Temperature}">
+                                    <Setter Property="IsEnabled" Value="False" />
+                                    <Setter Property="ContentTemplate">
+                                        <Setter.Value>
+                                            <DataTemplate>
+                                                <TextBlock/>
+                                            </DataTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding StepTarget}" Value="{x:Static common:StepTarget.Wait}">
+                                    <Setter Property="IsEnabled" Value="False" />
+                                    <Setter Property="ContentTemplate">
+                                        <Setter.Value>
+                                            <DataTemplate>
+                                                <TextBlock/>
+                                            </DataTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTemplateColumn.CellStyle>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn MinWidth="100">
+                    <DataGridTemplateColumn.Header>
+                        <DataGridColumnHeader HorizontalContentAlignment="Center" Content="Value" FontWeight="Bold"></DataGridColumnHeader>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid HorizontalAlignment="Center" VerticalAlignment="Stretch">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" ></ColumnDefinition>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding RampValue, StringFormat={}{0:F1}}" VerticalAlignment="Center" HorizontalAlignment="Stretch"  TextAlignment="Center"></TextBlock>
+                                <TextBlock Grid.Column="1" Text="{Binding RampUnit}" VerticalAlignment="Center" Margin="3,0,0,0"></TextBlock>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Text="{Binding RampValue}" TextAlignment="Center"></TextBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                    <DataGridTemplateColumn.CellStyle>
+                        <Style BasedOn="{StaticResource {x:Type DataGridCell}}" TargetType="{x:Type DataGridCell}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding StepTarget}" Value="{x:Static common:StepTarget.Temperature}">
+                                    <Setter Property="IsEnabled" Value="False" />
+                                    <Setter Property="ContentTemplate">
+                                        <Setter.Value>
+                                            <DataTemplate>
+                                                <TextBlock/>
+                                            </DataTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTemplateColumn.CellStyle>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>-->
+
+    </Grid>
+</Window>
